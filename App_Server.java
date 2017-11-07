@@ -11,7 +11,7 @@ class Location
 	{
 		String parts[] = current_location.split(" ");
 		Longitue = Double.parseDouble(parts[0]);
-		Longitue = Double.parseDouble(parts[1]);
+		Latitude = Double.parseDouble(parts[1]);
 	}
 }
 
@@ -37,7 +37,7 @@ class Create_User implements Runnable
 			while(true)
 			{
 				Location query_location = new Location(socket_input.nextLine());
-				socket_output.println("Got you query");
+				System.out.println(query_location.Longitue + "  " + query_location.Latitude);
 			}
 		}
 		catch(Exception e){}
@@ -55,11 +55,13 @@ class Server
 
 	void start_server() throws Exception
 	{
+		// create server and a location hashmap to keep count
 		current_location = new HashMap<Location, Integer>();
+		server = new ServerSocket(9999);
+		System.out.println("Server Started..");
 		while(true)
 		{
-			// Create Server Socket and start accepting requests
-			server = new ServerSocket(9999);
+			// start accepting requests
 			socket = server.accept();
 
 			socket_input = new Scanner(socket.getInputStream());
@@ -67,6 +69,8 @@ class Server
 
 			// Send a Connection Established message 
 			socket_output.println("Connection Established");
+
+			// get current location of the user
 			String current_location = socket_input.nextLine();
 			Thread new_user = new Thread(new Create_User(socket, current_location));
 			new_user.start();
@@ -76,7 +80,7 @@ class Server
 
 class Run_Server
 {
-	public static void main(String args) throws Exception
+	public static void main(String args[]) throws Exception
 	{
 		Server server = new Server();
 		server.start_server();
