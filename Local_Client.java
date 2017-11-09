@@ -33,7 +33,7 @@ class Client
 			System.out.println(recieved_message);
 
 			// send your current location
-			socket_output.println("33.33 66.66");
+			socket_output.println("0.0 33.33 66.66");
 		}
 		catch(Exception e){}
 
