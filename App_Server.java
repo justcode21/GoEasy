@@ -2,28 +2,77 @@ import java.util.*;
 import java.net.*;
 import java.io.*;
 
+// Global hash_map with increase and decrease functions
 class Hash_Map
 {
 	public static HashMap<String, Integer> all_locations = new HashMap<String, Integer>();
+
+	public static void increase_count(String key)
+	{
+		if (Hash_Map.all_locations.containsKey(key)) 
+          	Hash_Map.all_locations.put(key, Hash_Map.all_locations.get(key) + 1);
+        else
+        	Hash_Map.all_locations.put(key, 1);
+	}
+
+	public static void decrease_count(String key)
+	{
+		if (Hash_Map.all_locations.containsKey(key) && Hash_Map.all_locations.get(key) > 0) 
+          	Hash_Map.all_locations.put(key, Hash_Map.all_locations.get(key) - 1);
+	}
+
 }
 
 class Location
 {
-	double Longitue;
-	double Latitude;
-	int Flag; 
+	int Type;
+	double Longitude, Latitude;
+
 	Location(String current_location)
 	{
 		String parts[] = current_location.split(" ");
-		Flag = Integer.parseInt(parts[0]);
-		Longitue = Double.parseDouble(parts[1]);
+		Type = (int)Double.parseDouble(parts[0]);
+		Longitude = Double.parseDouble(parts[1]);
 		Latitude = Double.parseDouble(parts[2]);
 	}
 
+	Location(int Type, String current_location)
+	{
+		this.Type = Type;
+		String parts[] = current_location.split(" ");
+		Longitude = Double.parseDouble(parts[0]);
+		Latitude = Double.parseDouble(parts[1]);
+	}
+
+	// Returns the location of this object in string format 
 	String get_location()
 	{
-		return Integer.toString(Longitue) + " " + Integer.toString(Latitude);
+		return Double.toString(Longitude) + " " + Double.toString(Latitude);
 	}
+
+	// Calculates the distance between two locations
+	static double distance(Location first, Location second)
+	{
+    	return Math.sqrt(Math.pow((first.Latitude - second.Latitude), 2.0) + 
+    					 Math.pow((first.Longitude - second.Longitude), 2.0));
+	}
+
+	// Returns all the nearest locations with count
+    static String get_all_locations(Location current_location)
+    {
+        String all_locations = "";
+        Iterator it = Hash_Map.all_locations.entrySet().iterator();
+        while (it.hasNext()) 
+        {
+            Map.Entry item = (Map.Entry)it.next();
+            Location coordinates = new Location(1, item.getKey().toString());
+            if(Location.distance(current_location, coordinates) <= 100.0)
+                all_locations += item.getKey() + " " + item.getValue() + " ";
+            //it.remove();
+        }
+        System.out.println(all_locations);
+  		return all_locations;
+    }
 }
 
 class Create_User implements Runnable
@@ -33,64 +82,38 @@ class Create_User implements Runnable
 	PrintStream socket_output;
 	Location current_location;
 
-	Create_User(Socket socket, String my_location)
+	Create_User(Socket socket, Location my_location)
 	{
 		this.socket = socket;
-		this.current_location = new Location(my_location);
+		this.current_location = my_location;
+		System.out.println(this.current_location.get_location());
 	}
-
-	double distance(Location first, Location second)
-	{
-    	return Math.sqrt(Math.pow((first.Latitude - second.Latitude), 2.0) + 
-    					 Math.pow((first.Longitue - second.Longitue), 2.0));
-	}
-
-    String send_location(Location current_location)
-    {
-        String all_locations;
-        Iterator it = H.hm.entrySet().iterator();
-        while (it.hasNext()) 
-        {
-            Map.Entry item = (Map.Entry)it.next();
-            System.out.println(item.getKey() + " - " + item.getValue());
-            Location coordinates = new Location(item.getKey().toString());
-            if(distance(current_location, coordinates) < 10.0)
-                all_locations += pair.getKey() + " ";
-            it.remove(); // avoids a ConcurrentModificationException
-        }
-        System.out.println(all_locations);
-        return all_locations;
-    }
 
 	void handle_query(Location query)
 	{
-		String location = query.get_location();
-		if (query.Flag == 0)
+		if (query.Type == 0)
 		{
-			if (Hash_Map.all_locations.containsKey(location)) 
-          		Hash_Map.all_locations.put(location,Hash_Map.all_locations.get(location) + 1);
-        	else
-        		Hash_Map.all_locations.put(location, 1);
+			Hash_Map.increase_count(query.get_location());
 
-       		System.out.println("People at " + s + " : " + Hash_Map.all_locations.get(location));
+       		System.out.println("People at " + query.get_location() + " : " + Hash_Map.all_locations.get(query.get_location()));
 					
-			System.out.println(query_location.Longitue + "  " + query_location.Latitude);
+			System.out.println(query.Longitude + "  " + query.Latitude);
 		}
 		else
-			socket_output.println(send_location(query));
+			socket_output.println(Location.get_all_locations(query));
 	}
 
 	public void run()
 	{
 		try
 		{
-			// create socket streams for current user thread
+			// Create socket streams for current user thread
 			socket_input = new Scanner(socket.getInputStream());
 			socket_output = new PrintStream(socket.getOutputStream());
 
 			while(true)
 			{
-
+				// Start accepting and handleing queries
 				Location query = new Location(socket_input.nextLine());
 				handle_query(query);
 			}
@@ -108,12 +131,12 @@ class Server
 	
 	void start_server() throws Exception
 	{
-		// create server and a location hashmap to keep count
+		// Create server and a location hashmap to keep count
 		server = new ServerSocket(9999);
 		System.out.println("Server Started..");
 		while(true)
 		{
-			// start accepting requests
+			// Start accepting requests
 			socket = server.accept();
 
 			socket_input = new Scanner(socket.getInputStream());
@@ -122,13 +145,11 @@ class Server
 			// Send a Connection Established message 
 			socket_output.println("Connection Established");
 
-			// get current location of the user
-			String current_location = socket_input.nextLine();
-
-			String parts[] = current_location.split(" ");
-			String s = (parts[1] + " " + parts[2]);
-			H.hm.put(s, 1);
-
+			// Get current location of the user
+			Location current_location = new Location(socket_input.nextLine());
+			Hash_Map.increase_count(current_location.get_location());
+			
+			// Create a new thread for a new user
 			Thread new_user = new Thread(new Create_User(socket, current_location));
 			new_user.start();
 		}
