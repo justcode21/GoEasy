@@ -39,6 +39,29 @@ class Create_User implements Runnable
 		this.current_location = new Location(my_location);
 	}
 
+	double distance(Location first, Location second)
+	{
+    	return Math.sqrt(Math.pow((first.Latitude - second.Latitude), 2.0) + 
+    					 Math.pow((first.Longitue - second.Longitue), 2.0));
+	}
+
+    String send_location(Location current_location)
+    {
+        String all_locations;
+        Iterator it = H.hm.entrySet().iterator();
+        while (it.hasNext()) 
+        {
+            Map.Entry item = (Map.Entry)it.next();
+            System.out.println(item.getKey() + " - " + item.getValue());
+            Location coordinates = new Location(item.getKey().toString());
+            if(distance(current_location, coordinates) < 10.0)
+                all_locations += pair.getKey() + " ";
+            it.remove(); // avoids a ConcurrentModificationException
+        }
+        System.out.println(all_locations);
+        return all_locations;
+    }
+
 	void handle_query(Location query)
 	{
 		String location = query.get_location();
@@ -54,7 +77,7 @@ class Create_User implements Runnable
 			System.out.println(query_location.Longitue + "  " + query_location.Latitude);
 		}
 		else
-			socket_output.println(find_Loc(query));
+			socket_output.println(send_location(query));
 	}
 
 	public void run()
@@ -74,32 +97,6 @@ class Create_User implements Runnable
 		}
 		catch(Exception e){}
 	}
-
-    String find_Loc(Location location)
-    {
-            double lat = loc.Latitude;
-            double lon = loc.Longitue;
-            String s1="";
-            String s2="";
-            Iterator it = H.hm.entrySet().iterator();
-            while (it.hasNext()) {
-                Map.Entry pair = (Map.Entry)it.next();
-                System.out.println(pair.getKey() + " - " + pair.getValue());
-                s1=pair.getKey().toString();
-                String parts[] = s1.split(" ");
-                double lo = Double.parseDouble(parts[0]);
-		double la = Double.parseDouble(parts[1]);
-                double distance = Math.sqrt(Math.pow((la-lat),2.0)+Math.pow((lo-lon),2.0));
-                if(distance<10.0){
-                    s2+=pair.getKey()+" ";
-                }
-                it.remove(); // avoids a ConcurrentModificationException
-            }
-            System.out.println(s2);
-            return s2;
-        }
-        
-
 }
 
 class Server
