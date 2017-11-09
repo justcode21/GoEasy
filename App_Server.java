@@ -68,9 +68,7 @@ class Location
             Location coordinates = new Location(1, item.getKey().toString());
             if(Location.distance(current_location, coordinates) <= 100.0)
                 all_locations += item.getKey() + " " + item.getValue() + " ";
-            //it.remove();
         }
-        System.out.println(all_locations);
   		return all_locations;
     }
 }
@@ -86,19 +84,12 @@ class Create_User implements Runnable
 	{
 		this.socket = socket;
 		this.current_location = my_location;
-		System.out.println(this.current_location.get_location());
 	}
 
 	void handle_query(Location query)
 	{
 		if (query.Type == 0)
-		{
 			Hash_Map.increase_count(query.get_location());
-
-       		System.out.println("People at " + query.get_location() + " : " + Hash_Map.all_locations.get(query.get_location()));
-					
-			System.out.println(query.Longitude + "  " + query.Latitude);
-		}
 		else
 			socket_output.println(Location.get_all_locations(query));
 	}
