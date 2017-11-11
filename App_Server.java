@@ -86,7 +86,23 @@ class Location
             if(Location.distance(current_location, coordinates) <= 100.0)
                 all_locations_count += (int)item.getValue();
         }
+        System.out.println(all_locations_count);
   		return Integer.toString(all_locations_count);
+    }
+
+    // Simulate a random hash to demostrate the working
+    static void fill_hash_map(Location current_location)
+    {
+    	Random r = new Random();
+    	double number_of_element = r.nextInt(50) + 1;
+    	for(int i = 0; i < number_of_element; i++)
+    	{
+    		double extra_longitude = 1 + 34 * r.nextDouble();
+    		double extra_lattitude = 1 + 34 * r.nextDouble();
+    		String new_key = Double.toString(current_location.Lattitude + extra_lattitude/100) + " " +
+    						 Double.toString(current_location.Longitude + extra_longitude/100);
+    		Hash_Map.increase_count(new_key); 
+    	}
     }
 }
 
@@ -108,7 +124,11 @@ class Create_User implements Runnable
 		if (query.Type == 0)
 			Hash_Map.increase_count(query.get_location());
 		else
+		{
+			// Comment out next line to get the real app working
+			Location.fill_hash_map(query);
 			socket_output.println(Location.get_all_locations(query));
+		}
 	}
 
 	public void run()
