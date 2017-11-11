@@ -75,7 +75,7 @@ class Location
 	}
 
 	// Returns all the nearest locations with count
-    static String get_all_locations(Location current_location)
+    static int get_all_locations(Location current_location)
     {
         int all_locations_count = 0;
         Iterator it = Hash_Map.all_locations.entrySet().iterator();
@@ -87,7 +87,7 @@ class Location
                 all_locations_count += (int)item.getValue();
         }
         System.out.println(all_locations_count);
-  		return Integer.toString(all_locations_count);
+  		return all_locations_count;
     }
 
     // Simulate a random hash to demostrate the working
@@ -160,7 +160,7 @@ class Server
 	void start_server() throws Exception
 	{
 		// Create server and a location hashmap to keep count
-		server = new ServerSocket(9999);
+		server = new ServerSocket(8080);
 		System.out.println("Server Started..");
 		while(true)
 		{

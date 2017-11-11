@@ -23,7 +23,7 @@ class Client
 		try
 		{
 			// initilize sockets for client
-			socket = new Socket("localhost", 9999);
+			socket = new Socket("localhost", 8080);
 			socket_input = new Scanner(socket.getInputStream());
 			socket_output = new PrintStream(socket.getOutputStream());
 			console_input = new Scanner(System.in);
