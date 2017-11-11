@@ -61,15 +61,16 @@ class Location
     static String get_all_locations(Location current_location)
     {
         String all_locations = "";
+        int all_locations_count = 0;
         Iterator it = Hash_Map.all_locations.entrySet().iterator();
         while (it.hasNext()) 
         {
             Map.Entry item = (Map.Entry)it.next();
             Location coordinates = new Location(1, item.getKey().toString());
             if(Location.distance(current_location, coordinates) <= 100.0)
-                all_locations += item.getKey() + " " + item.getValue() + " ";
+                all_locations_count += (int)item.getValue();
         }
-  		return all_locations;
+  		return Integer.toString(all_locations_count);
     }
 }
 
