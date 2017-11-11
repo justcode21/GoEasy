@@ -26,37 +26,42 @@ class Hash_Map
 class Location
 {
 	int Type;
-	double Longitude, Lattitude;
+	double Lattitude, Longitude;
 
 	Location(String current_location)
 	{
 		String parts[] = current_location.split(" ");
 		Type = (int)Double.parseDouble(parts[0]);
-		Longitude = Double.parseDouble(parts[1]);
-		Lattitude = Double.parseDouble(parts[2]);
+		Lattitude = Double.parseDouble(parts[1]);
+		Longitude = Double.parseDouble(parts[2]);
 	}
 
 	Location(int Type, String current_location)
 	{
 		this.Type = Type;
 		String parts[] = current_location.split(" ");
-		Longitude = Double.parseDouble(parts[0]);
-		Lattitude = Double.parseDouble(parts[1]);
+		Lattitude = Double.parseDouble(parts[0]);
+		Longitude = Double.parseDouble(parts[1]);
 	}
 
 	// Returns the location of this object in string format 
 	String get_location()
 	{
-		return Double.toString(Longitude) + " " + Double.toString(Lattitude);
+		return Double.toString(Lattitude) + " " + Double.toString(Longitude);
+	}
+
+	static double degree_to_radian(double degree)
+	{
+		return degree * (Math.PI/180);
 	}
 
 	// Calculates the distance between two locations
 	static double distance(Location first, Location second)
 	{
-		double Lattitude = first.Lattitude;
-		double Longitude = first.Longitude;
-		double newLattitude = second.Lattitude;
-		double newLongitude = second.Longitude;
+		double Lattitude = degree_to_radian(first.Lattitude);
+		double Longitude = degree_to_radian(first.Longitude);
+		double newLattitude = degree_to_radian(second.Lattitude);
+		double newLongitude = degree_to_radian(second.Longitude);
 
 		double differenceLattitude = Math.abs(Lattitude - newLattitude);
 		double differenceLongitude = Math.abs(Longitude - newLongitude);
@@ -72,7 +77,6 @@ class Location
 	// Returns all the nearest locations with count
     static String get_all_locations(Location current_location)
     {
-        String all_locations = "";
         int all_locations_count = 0;
         Iterator it = Hash_Map.all_locations.entrySet().iterator();
         while (it.hasNext()) 
