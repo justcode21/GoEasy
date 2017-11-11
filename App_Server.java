@@ -26,14 +26,14 @@ class Hash_Map
 class Location
 {
 	int Type;
-	double Longitude, Latitude;
+	double Longitude, Lattitude;
 
 	Location(String current_location)
 	{
 		String parts[] = current_location.split(" ");
 		Type = (int)Double.parseDouble(parts[0]);
 		Longitude = Double.parseDouble(parts[1]);
-		Latitude = Double.parseDouble(parts[2]);
+		Lattitude = Double.parseDouble(parts[2]);
 	}
 
 	Location(int Type, String current_location)
@@ -41,20 +41,32 @@ class Location
 		this.Type = Type;
 		String parts[] = current_location.split(" ");
 		Longitude = Double.parseDouble(parts[0]);
-		Latitude = Double.parseDouble(parts[1]);
+		Lattitude = Double.parseDouble(parts[1]);
 	}
 
 	// Returns the location of this object in string format 
 	String get_location()
 	{
-		return Double.toString(Longitude) + " " + Double.toString(Latitude);
+		return Double.toString(Longitude) + " " + Double.toString(Lattitude);
 	}
 
 	// Calculates the distance between two locations
 	static double distance(Location first, Location second)
 	{
-    	return Math.sqrt(Math.pow((first.Latitude - second.Latitude), 2.0) + 
-    					 Math.pow((first.Longitude - second.Longitude), 2.0));
+		double Lattitude = first.Lattitude;
+		double Longitude = first.Longitude;
+		double newLattitude = second.Lattitude;
+		double newLongitude = second.Longitude;
+
+		double differenceLattitude = Math.abs(Lattitude - newLattitude);
+		double differenceLongitude = Math.abs(Longitude - newLongitude);
+		double numerator = Math.sqrt(Math.pow((Math.cos(newLattitude) * Math.sin(differenceLongitude)), 2) + Math.pow(((Math.cos(Lattitude) * Math.sin(newLattitude)) - 
+						   (Math.sin(Lattitude) * Math.cos(newLattitude) * Math.cos(differenceLongitude))), 2)); 
+		
+		double denominator = (Math.sin(Lattitude) * Math.sin(newLattitude)) + 
+							 (Math.cos(Lattitude) * Math.cos(newLattitude) * Math.cos(differenceLongitude));
+
+		return 6371.0088 * Math.atan2(numerator, denominator);
 	}
 
 	// Returns all the nearest locations with count
