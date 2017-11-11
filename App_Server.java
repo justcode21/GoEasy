@@ -86,7 +86,6 @@ class Location
             if(Location.distance(current_location, coordinates) <= 100.0)
                 all_locations_count += (int)item.getValue();
         }
-        System.out.println(all_locations_count);
   		return all_locations_count;
     }
 
