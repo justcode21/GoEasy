@@ -1,0 +1,6 @@
+framework module Pods_GoEasy {
+  umbrella header "Pods-GoEasy-umbrella.h"
+
+  export *
+  module * { export * }
+}
