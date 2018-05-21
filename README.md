@@ -1,5 +1,5 @@
-# GoEasy
-This App was developed for the "SmartCity"Hackthon organized in JUIT. It won the socond prize of INR 10k.
+## Overview
+GoEasy was developed for the "SmartCity"Hackthon organized in JUIT. It won the socond prize of INR 10k.
 
 The App fetches the real-time locations of clients and navigates you towards the least croweded facility you
 are looking for, the facilities include - 
