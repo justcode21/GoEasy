@@ -18,6 +18,8 @@ The App saves your time and energy and is very useful in emergencies, some of th
 * In cases like demonitization the app can give you the exact count of people standing in queues in front of the atm's
    in your viscinity, so that you can plan accordingly.
   
-The App is made for IOS and the server which follows a Multithreaded Client-Server architecture to entertain requests
+The App is made for IOS and the test server which follows a Multithreaded Client-Server architecture to entertain requests
 is written in Java.
 
+## Screenshots
+<img src = "Screenshots/1.png" width = 300 height = 600>
