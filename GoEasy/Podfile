@@ -10,4 +10,5 @@ target 'GoEasy' do
   pod 'GooglePlaces'
   pod 'Alamofire'
   pod 'SwiftyJSON'
+  project '/Users/prakharsrivastava/Desktop/GoEasy/GoEasy/GoEasy/GoEasy.xcodeproj'
 end

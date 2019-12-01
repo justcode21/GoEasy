@@ -124,7 +124,7 @@ class ViewController: UIViewController {
         super.viewDidAppear(animated)
         let backgroundImage = UIImageView(frame: UIScreen.main.bounds)
         backgroundImage.image = UIImage(named: "bg")
-        backgroundImage.contentMode = UIViewContentMode.scaleAspectFill
+        backgroundImage.contentMode = UIView.ContentMode.scaleAspectFill
         self.view.insertSubview(backgroundImage, at: 0)
         /**/
     }
@@ -167,7 +167,7 @@ extension ViewController: GMSAutocompleteViewControllerDelegate {
         let lng =  place.coordinate.longitude
         let name = place.name
         
-        let a: picks = picks(lat: lat , lng: lng, count: c, name: name)
+        let a: picks = picks(lat: lat , lng: lng, count: c, name: name!)
         self.picksData.append(a)
         
         dismiss(animated: true) {
